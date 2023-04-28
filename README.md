@@ -1,2 +1,2 @@
-# kubeflow-katib
+# katib-rocks
 ROCKs for Kubeflow Katib
