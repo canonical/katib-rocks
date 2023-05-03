@@ -1,0 +1,27 @@
+name: filemetrics-collector
+summary: Katib file metrics collector in a Rock.
+description: Katib file metrics collector.
+version: "1.0"
+base: bare
+build-base: ubuntu:22.04
+license: Apache-2.0
+platforms:
+  amd64:
+
+services:
+  filemetrics-collector:
+      command: /app/file-metricscollector
+      override: replace
+      startup: enabled
+
+parts:
+  filemetrics-collector:
+    plugin: go
+    build-snaps:
+      - go/1.19/stable
+    source: https://github.com/kubeflow/katib
+    source-type: git
+    override-build: |
+      go mod download -x
+      go build -a -o ${CRAFT_PART_INSTALL}/app/file-metricscollector  ./cmd/metricscollector/v1beta1/file-metricscollector
+  
