@@ -1,0 +1,30 @@
+name: cert-generator
+summary: Katib cert generator in a ROCK.
+description: "Katib cert generator"
+version: "0.15.0"
+base: ubuntu:22.04
+build-base: ubuntu:22.04
+license: Apache-2.0
+
+services:
+  cert-generator:
+    command: /app/katib-cert-generator
+    override: replace
+    startup: enabled
+
+platforms:
+  amd64:
+
+parts:
+  cert-generator:
+    plugin: go
+    source: https://github.com/kubeflow/katib
+    source-type: git
+    source-tag: "v0.15.0"
+    build-snaps:
+      - go/1.19/stable
+    override-build: |
+      go mod download -x
+      CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o katib-cert-generator ./cmd/cert-generator/v1beta1
+      mkdir -p ${CRAFT_PART_INSTALL}/app/
+      cp -rp katib-cert-generator ${CRAFT_PART_INSTALL}/app/
