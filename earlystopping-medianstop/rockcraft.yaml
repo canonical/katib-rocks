@@ -12,19 +12,50 @@ platforms:
     # original dockerfile supports also ppc64le and arm64;
     # at the moment we only support amd64.
 
+services:
+  katib-earlystopping-medianstop:
+    command: /usr/bin/katib-earlystopping-medianstop
+    override: replace
+    startup: enabled
+
 parts:
-    build:
+    medianstop:
+      plugin: dump
+      source: https://github.com/kubeflow/katib.git
+      source-depth: 1
+      source-type: git
+      source-subdir: cmd/earlystopping/medianstop/v1beta1
+      organize:
+        main.py: opt/katib/cmd/earlystopping/medianstop/v1beta1/main.py
+        requirements.txt: opt/katib/cmd/earlystopping/medianstop/v1beta1/requirements.txt
+      stage:
+        - opt/katib/cmd/earlystopping/medianstop/v1beta1/main.py
+        - opt/katib/cmd/earlystopping/medianstop/v1beta1/requirements.txt
+
+    medianstop-dependencies:
       plugin: python
-      source: https://github.com/kubeflow/katib/
+      source: https://github.com/kubeflow/katib.git
+      source-depth: 1
       source-subdir: cmd/earlystopping/medianstop/v1beta1
       source-type: git
       source-tag: master
       python-requirements:
         - requirements.txt
 
-    copy-entrypoint:
+    pkg:
       plugin: dump
-      source: https://github.com/kubeflow/katib/
+      source: https://github.com/kubeflow/katib.git
+      source-depth: 1
+      source-type: git
+      source-subdir: pkg
+      organize:
+        '*': opt/katib/pkg/
+      stage:
+        - -opt/katib/pkg/
+
+    entrypoint:
+      plugin: dump
+      source: https://github.com/kubeflow/katib.git
       source-subdir: cmd/earlystopping/medianstop/v1beta1
       source-type: git
       source-tag: master
@@ -32,9 +63,3 @@ parts:
         main.py: usr/bin/main.py
       stage:
         - usr/bin/main.py
-
-services:
-  katib-earlystopping-medianstop:
-    command: /usr/bin/katib-earlystopping-medianstop
-    override: replace
-    startup: enabled
