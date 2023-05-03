@@ -1,0 +1,41 @@
+name: katib-ui
+summary: UI for Katib
+description: UI for Katib
+version: 0.15.0
+base: ubuntu:22.04
+license: Apache-2.0
+
+platforms:
+  amd64: {}
+
+services:
+  katib-ui:
+    command: /app/katib-ui
+    override: replace
+
+parts:
+  frontend:
+    plugin: npm
+    after: [backend]
+    source: https://github.com/kubeflow/katib.git
+    source-type: git
+    source-tag: v0.15.0
+    build-snaps: [node/12/stable]
+    override-build: |
+      cd pkg/ui/v1beta1/frontend
+      npm ci
+      npm run build
+      rm -rf node_modules
+    organize:
+      kpg/ui/v1beta/frontend/build: /app/build
+  backend:
+    plugin: go
+    source: https://github.com/kubeflow/katib.git
+    source-type: git
+    source-tag: v0.15.0
+    build-snaps: [go]
+    override-build: |
+      go mod download -x
+      CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o katib-ui ./cmd/ui/v1beta1
+    organize:
+      katib-ui: /app
