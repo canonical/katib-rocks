@@ -1,0 +1,51 @@
+name: tfevent-metricscollector
+base: ubuntu:22.04
+version: v1beta1
+summary: Katib tfevent-metricscontroller image
+license: Apache-2.0
+description: Katib tfevent-metricscontroller image
+
+platforms:
+  amd64:
+
+services:
+  tfevent-metricscollector:
+    command: /usr/bin/main.py
+    override: replace
+    startup: enabled
+
+parts:
+  metricscollector:
+    plugin: python
+    python-requirements:
+        - requirements.txt
+    source: https://github.com/kubeflow/katib
+    source-subdir: cmd/metricscollector/v1beta1/tfevent-metricscollector/
+    source-type: git
+    build-packages:
+      - gfortran
+      - libpcre3
+      - libpcre3-dev
+
+  source-files:
+    plugin: dump
+    source: https://github.com/kubeflow/katib.git
+    source-depth: 1
+    source-type: git
+    organize:
+      pkg/: opt/katib/pkg/
+      cmd/metricscollector/v1beta1/tfevent-metricscollector/: opt/katib/cmd/metricscollector/v1beta1/tfevent-metricscollector/
+    stage:
+      - opt/katib/pkg/
+      - opt/katib/cmd/metricscollector/v1beta1/tfevent-metricscollector/*
+
+  main:
+    plugin: dump
+    source: https://github.com/kubeflow/katib.git
+    source-depth: 1
+    source-type: git
+    source-subdir: cmd/metricscollector/v1beta1/tfevent-metricscollector/
+    organize:
+      main.py: usr/bin/main.py
+    stage:
+      - usr/bin/main.py
