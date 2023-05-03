@@ -13,16 +13,21 @@ platforms:
     # at the moment we only support amd64.
 
 parts:
-    dependencies:
+    build:
       plugin: python
       source: https://github.com/kubeflow/katib/
       source-subdir: cmd/earlystopping/medianstop/v1beta1
       source-type: git
       source-tag: master
-      build-environment:
-        - BUILD_IN_CONTAINER: "false"
       python-requirements:
         - requirements.txt
+
+    copy-entrypoint:
+      plugin: dump
+      source: https://github.com/kubeflow/katib/
+      source-subdir: cmd/earlystopping/medianstop/v1beta1
+      source-type: git
+      source-tag: master
       organize:
         main.py: usr/bin/main.py
       stage:
