@@ -1,0 +1,30 @@
+name: katib-controller
+summary: katib-controller
+description: katib-controller
+version: "1.0"
+base: bare
+build-base: ubuntu:22.04
+license: Apache-2.0
+platforms:
+  amd64:
+
+services:
+  katib-controller:
+    override: replace
+    startup: enabled
+    command: katib-controller
+
+parts:
+  katib-controller:
+    plugin: go
+    build-snaps:
+      - go
+    source: https://github.com/kubeflow/katib.git
+    build-environment:
+      - CGO_ENABLED: 0
+      - GOOS: linux
+    override-build: |
+      go mod download -x
+      go build -a -o $CRAFT_PART_INSTALL/katib-controller ./cmd/katib-controller/v1beta1
+    organize:
+      katib-controller: bin/katib-controller
