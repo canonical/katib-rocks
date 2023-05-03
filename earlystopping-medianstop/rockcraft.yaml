@@ -16,13 +16,15 @@ parts:
     dependencies:
       plugin: python
       source: https://github.com/kubeflow/katib/
+      source-subdir: cmd/earlystopping/medianstop/v1beta1
       source-type: git
       source-tag: master
       build-environment:
         - BUILD_IN_CONTAINER: "false"
-      python-requirements: cmd/earlystopping/medianstop/v1beta1/requirements.txt
+      python-requirements:
+        - requirements.txt
       organize:
-        cmd/earlystopping/medianstop/v1beta1/main.py: usr/bin/main.py
+        main.py: usr/bin/main.py
       stage:
         - usr/bin/main.py
 
