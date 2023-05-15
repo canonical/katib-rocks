@@ -1,0 +1,64 @@
+name: suggestion-pbt
+base: ubuntu:22.04
+version: v1beta1
+summary: suggestion pbt rocks!
+description: |
+    This is a ROCK.
+license: Apache-2.0
+platforms:
+    amd64:
+
+services:
+  pbt:
+    override: replace
+    command: /bin/python3 /opt/katib/cmd/suggestion/pbt/v1beta1/main.py
+    environment:
+      PYTHONPATH: "/opt/katib:/opt/katib/pkg/apis/manager/v1beta1/python:/opt/katib/pkg/apis/manager/health/python"
+      PYTHONUNBUFFERED: "true"
+    startup: enabled
+
+parts:
+    grpc-health-check:
+      plugin: dump
+      source: https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/v0.4.15/grpc_health_probe-linux-amd64
+      source-type: file
+      organize:
+        grpc_health_probe-linux-amd64: bin/grpc_health_probe
+      override-stage: |
+        craftctl default
+        chmod +x $CRAFT_STAGE/bin/grpc_health_probe
+
+
+    pkg:
+      plugin: dump
+      source: https://github.com/kubeflow/katib.git
+      source-depth: 1
+      source-type: git
+      source-subdir: pkg 
+      organize:
+        '*': opt/katib/pkg/
+
+    pbt:
+      plugin: dump
+      source: https://github.com/kubeflow/katib.git
+      source-depth: 1
+      source-type: git
+      source-subdir: cmd/suggestion/pbt/v1beta1
+      organize:
+        main.py: opt/katib/cmd/suggestion/pbt/v1beta1/main.py
+        requirements.txt: opt/katib/cmd/suggestion/pbt/v1beta1/requirements.txt
+      stage:
+        - opt/katib/cmd/suggestion/pbt/v1beta1/main.py
+        - opt/katib/cmd/suggestion/pbt/v1beta1/requirements.txt
+
+    pbt-dependencies:
+      after: [pbt]
+      plugin: python
+      source: https://github.com/kubeflow/katib.git
+      source-depth: 1
+      source-type: git
+      source-subdir: cmd/suggestion/pbt/v1beta1
+      python-requirements:
+        - requirements.txt
+      stage-packages:
+        - python3-venv
