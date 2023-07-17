@@ -1,65 +1,44 @@
+# https://github.com/kubeflow/katib/tree/master/cmd/earlystopping/medianstop/v1beta1
 name: earlystopping-medianstop
 base: ubuntu:22.04
-version: '1-beta1'
+version: 'v0.12.0_22.04_1'
 summary: Early stopping algorithm for katib.
 description: |
     The median stopping rule stops a pending trial X at step S if the trial’s best 
     objective value by step S is worse than the median value of the running averages 
     of all completed trials' objectives reported up to step S.
 license: GPL-3.0
-platforms:
-    amd64: {}
-    # original dockerfile supports also ppc64le and arm64;
-    # at the moment we only support amd64.
-
+run-user: _daemon_
 services:
-  katib-earlystopping-medianstop:
-    command: /usr/bin/katib-earlystopping-medianstop
+  earlystopping-medianstop:
     override: replace
     startup: enabled
+    command: "python main.py"
+platforms:
+    amd64:
 
 parts:
-    medianstop:
-      plugin: dump
+    earlystopping-medianstop:
+      plugin: python
       source: https://github.com/kubeflow/katib.git
+      source-tag: "v0.12.0"
       source-depth: 1
       source-type: git
       source-subdir: cmd/earlystopping/medianstop/v1beta1
+      build-packages:
+        - pip
+        - python3.10
+      stage-packages:
+        - python3.10
+        - python3.10-venv
+      python-requirements:
+        - requirements.txt
       organize:
-        main.py: opt/katib/cmd/earlystopping/medianstop/v1beta1/main.py
-        requirements.txt: opt/katib/cmd/earlystopping/medianstop/v1beta1/requirements.txt
+        pkg: opt/katib/pkg/
+        cmd/earlystopping/medianstop/v1beta1/main.py: opt/katib/cmd/earlystopping/medianstop/v1beta1/main.py
+        cmd/earlystopping/medianstop/v1beta1/requirements.txt: opt/katib/cmd/earlystopping/medianstop/v1beta1/requirements.txt
       stage:
+        - opt/katib/pkg
         - opt/katib/cmd/earlystopping/medianstop/v1beta1/main.py
         - opt/katib/cmd/earlystopping/medianstop/v1beta1/requirements.txt
 
-    medianstop-dependencies:
-      plugin: python
-      source: https://github.com/kubeflow/katib.git
-      source-depth: 1
-      source-subdir: cmd/earlystopping/medianstop/v1beta1
-      source-type: git
-      source-tag: master
-      python-requirements:
-        - requirements.txt
-
-    pkg:
-      plugin: dump
-      source: https://github.com/kubeflow/katib.git
-      source-depth: 1
-      source-type: git
-      source-subdir: pkg
-      organize:
-        '*': opt/katib/pkg/
-      stage:
-        - -opt/katib/pkg/
-
-    entrypoint:
-      plugin: dump
-      source: https://github.com/kubeflow/katib.git
-      source-subdir: cmd/earlystopping/medianstop/v1beta1
-      source-type: git
-      source-tag: master
-      organize:
-        main.py: usr/bin/main.py
-      stage:
-        - usr/bin/main.py
