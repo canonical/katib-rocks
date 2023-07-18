@@ -12,6 +12,7 @@ run-user: _daemon_
 services:
   earlystopping-medianstop:
     override: replace
+    summary: "earlystopping-medianstop service"
     startup: enabled
     command: "python3 /opt/katib/cmd/earlystopping/medianstop/v1beta1/main.py"
     environment:
