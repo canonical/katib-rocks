@@ -1,0 +1,66 @@
+# Based on https://github.com/kubeflow/katib/blob/master/cmd/metricscollector/v1beta1/tfevent-metricscollector
+name: tfevent-metrics-collector
+base: ubuntu:22.04
+version: 'v0.15.0_22.04_1'
+summary: Metrics collector for TF Events for Katib.
+description: |
+    Collects metrics and stores them on the persistent layer (katib-db-manager). Used as sidecar.
+license: GPL-3.0
+run-user: _daemon_
+services:
+  tfevent-metrics-collector:
+    override: replace
+    summary: "tfevent-metrics-collector service"
+    startup: enabled
+    command: "python3 /opt/katib/cmd/metricscollector/v1beta1/tfevent-metricscollector/main.py"
+    environment:
+      PYTHONPATH: "/usr/local/lib/python3.10/dist-packages:/opt/katib:/opt/katib/pkg/apis/manager/v1beta1/python:/opt/katib/pkg/metricscollector/v1beta1/tfevent-metricscollector:/opt/katib/pkg/metricscollector/v1beta1/common"
+platforms:
+    amd64:
+
+parts:
+    # install requirements and other dependencies
+    requirements-and-deps:
+      plugin: python
+      source: https://github.com/kubeflow/katib.git
+      source-tag: "v0.15.0"
+      source-depth: 1
+      source-type: git
+      source-subdir: cmd/metricscollector/v1beta1/tfevent-metricscollector
+      build-packages:
+        - python3-pip
+        - python3.10
+        - python3.10-venv
+        - python3-dev
+      stage-packages:
+        - python3.10
+        - python3.10-venv
+      python-requirements:
+        - requirements.txt
+      override-build: |
+        craftctl default
+
+    # install required contents
+    tfevent-metrics-collector:
+      plugin: dump
+      source: https://github.com/kubeflow/katib.git
+      source-tag: "v0.15.0"
+      source-depth: 1
+      source-type: git
+      organize:
+        pkg: opt/katib/pkg
+        cmd/metricscollector/v1beta1/tfevent-metricscollector/main.py: opt/katib/cmd/metricscollector/v1beta1/tfevent-metricscollector/main.py
+        cmd/metricscollector/v1beta1/tfevent-metricscollector/requirements.txt: opt/katib/cmd/metricscollector/v1beta1/tfevent-metricscollector/requirements.txt
+      stage:
+        - opt/katib/pkg
+        - opt/katib/cmd/metricscollector/v1beta1/tfevent-metricscollector/main.py
+        - opt/katib/cmd/metricscollector/v1beta1/tfevent-metricscollector/requirements.txt
+
+    security-team-requirement:
+      plugin: nil
+      override-build: |
+        mkdir -p ${CRAFT_PART_INSTALL}/usr/share/rocks
+        (echo "# os-release" && cat /etc/os-release && echo "# dpkg-query" && \
+         dpkg-query --root=${CRAFT_PROJECT_DIR}/../bundles/ubuntu-22.04/rootfs/ -f '${db:Status-Abbrev},${binary:Package},${Version},${source:Package},${Source:Version}\n' -W) \
+         > ${CRAFT_PART_INSTALL}/usr/share/rocks/dpkg.query
+
