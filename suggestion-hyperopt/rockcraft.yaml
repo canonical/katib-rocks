@@ -27,8 +27,6 @@ parts:
       source-depth: 1
       source-type: git
       source-subdir: cmd/suggestion/hyperopt/v1beta1
-      build-snaps:
-        - curl
       build-packages:
         - python3-pip
         - python3.10
