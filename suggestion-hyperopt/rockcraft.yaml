@@ -2,9 +2,9 @@
 name: suggestion-hyperopt
 base: ubuntu:22.04
 version: 'v0.15.0_22.04_1'
-summary: "?????????"
+summary: "Katib Suggestion Hyperopt"
 description: |
-    Some description
+    Ktibe Suggetion Hyperopt. Hyperopt is a Python library for serial and parallel optimization over awkward search spaces, which may include real-valued, discrete, and conditional dimensions.
 license: GPL-3.0
 run-user: _daemon_
 services:
@@ -39,14 +39,8 @@ parts:
         - python3.10-venv
       python-requirements:
         - requirements.txt
-      build-environment:
-        - GRPC_HEALTH_PROBE_VERSION: "v0.4.15"
       override-build: |
         craftctl default
-
-        #mkdir -p ${CRAFT_PART_INSTALL}/bin
-        #curl -o ${CRAFT_PART_INSTALL}/bin/grpc_health_probe https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-${CRAFT_TARGET_ARCH}
-        #chmod +x ${CRAFT_PART_INSTALL}/bin/grpc_health_probe
 
     # install required contents
     suggestion-hyperopt:
@@ -63,6 +57,17 @@ parts:
         - opt/katib/pkg
         - opt/katib/cmd/suggestion/hyperopt/v1beta1/main.py
         - opt/katib/cmd/suggestion/hyperopt/v1beta1/requirements.txt
+
+    # health check
+    grpc-health-check:
+      plugin: dump
+      source: https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/v0.4.15/grpc_health_probe-linux-amd64
+      source-type: file
+      organize:
+        grpc_health_probe-linux-amd64: bin/grpc_health_probe
+      override-stage: |
+        craftctl default
+        chmod +x ${CRAFT_STAGE}/bin/grpc_health_probe
 
     security-team-requirement:
       plugin: nil
