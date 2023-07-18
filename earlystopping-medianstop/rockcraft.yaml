@@ -1,7 +1,7 @@
-# https://github.com/kubeflow/katib/tree/master/cmd/earlystopping/medianstop/v1beta1
+# Based on https://github.com/kubeflow/katib/tree/master/cmd/earlystopping/medianstop/v1beta1
 name: earlystopping-medianstop
 base: ubuntu:22.04
-version: 'v0.12.0_22.04_1'
+version: 'v0.15.0_22.04_1'
 summary: Early stopping algorithm for katib.
 description: |
     The median stopping rule stops a pending trial X at step S if the trial’s best 
@@ -13,32 +13,55 @@ services:
   earlystopping-medianstop:
     override: replace
     startup: enabled
-    command: "python main.py"
+    command: "python3 /opt/katib/cmd/earlystopping/medianstop/v1beta1/main.py"
+    environment:
+      PYTHONPATH: "/usr/local/lib/python3.10/dist-packages/:/opt/katib:/opt/katib/pkg/apis/manager/v1beta1/python"
 platforms:
     amd64:
 
 parts:
-    earlystopping-medianstop:
+    # install requirements and other dependencies
+    requirements-and-deps:
       plugin: python
       source: https://github.com/kubeflow/katib.git
-      source-tag: "v0.12.0"
+      source-tag: "v0.15.0"
       source-depth: 1
       source-type: git
       source-subdir: cmd/earlystopping/medianstop/v1beta1
       build-packages:
-        - pip
+        - python3-pip
         - python3.10
+        - python3.10-venv
+        - python3-dev
       stage-packages:
         - python3.10
         - python3.10-venv
       python-requirements:
         - requirements.txt
+      override-build: |
+        craftctl default
+
+    # install required contents
+    earlystopping-medianstop:
+      plugin: dump
+      source: https://github.com/kubeflow/katib.git
+      source-tag: "v0.15.0"
+      source-depth: 1
+      source-type: git
       organize:
-        pkg: opt/katib/pkg/
+        pkg: opt/katib/pkg
         cmd/earlystopping/medianstop/v1beta1/main.py: opt/katib/cmd/earlystopping/medianstop/v1beta1/main.py
         cmd/earlystopping/medianstop/v1beta1/requirements.txt: opt/katib/cmd/earlystopping/medianstop/v1beta1/requirements.txt
       stage:
         - opt/katib/pkg
         - opt/katib/cmd/earlystopping/medianstop/v1beta1/main.py
         - opt/katib/cmd/earlystopping/medianstop/v1beta1/requirements.txt
+
+    security-team-requirement:
+      plugin: nil
+      override-build: |
+        mkdir -p ${CRAFT_PART_INSTALL}/usr/share/rocks
+        (echo "# os-release" && cat /etc/os-release && echo "# dpkg-query" && \
+         dpkg-query --root=${CRAFT_PROJECT_DIR}/../bundles/ubuntu-22.04/rootfs/ -f '${db:Status-Abbrev},${binary:Package},${Version},${source:Package},${Source:Version}\n' -W) \
+         > ${CRAFT_PART_INSTALL}/usr/share/rocks/dpkg.query
 
