@@ -25,14 +25,12 @@ parts:
     source-tag: v0.15.0
     build-snaps:
       - go
-      - curl
     stage-packages:
       - libc6_libs
     build-environment:
       - CGO_ENABLED: "0"
       - GOOS: "linux"
       - GOARCH: "amd64"
-      - GRPC_HEALTH_PROBE_VERSION: "v0.4.15"
     override-build: |
       set -xe
       mkdir -p ${CRAFT_PART_INSTALL}/app
@@ -41,9 +39,16 @@ parts:
       go build -a -o katib-db-manager ./cmd/db-manager/v1beta1
       install -D -m755 katib-db-manager ${CRAFT_PART_INSTALL}/app/katib-db-manager
 
-      mkdir -p ${CRAFT_PART_INSTALL}/bin
-      curl -o ${CRAFT_PART_INSTALL}/bin/grpc_health_probe https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-${CRAFT_TARGET_ARCH}
-      chmod +x ${CRAFT_PART_INSTALL}/bin/grpc_health_probe
+  # health check
+  grpc-health-check:
+    plugin: dump
+    source: https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/v0.4.15/grpc_health_probe-linux-amd64
+    source-type: file
+    organize:
+      grpc_health_probe-linux-amd64: bin/grpc_health_probe
+    override-stage: |
+      craftctl default
+      chmod +x ${CRAFT_STAGE}/bin/grpc_health_probe
 
   security-team-requirement:
     plugin: nil
