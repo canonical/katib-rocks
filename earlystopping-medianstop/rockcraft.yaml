@@ -14,7 +14,8 @@ services:
     override: replace
     summary: "earlystopping-medianstop service"
     startup: enabled
-    command: "python3 /opt/katib/cmd/earlystopping/medianstop/v1beta1/main.py"
+    command: "python3 main.py"
+    working-dir: /opt/katib/cmd/earlystopping/medianstop/v1beta1/
     environment:
       PYTHONPATH: "/usr/local/lib/python3.10/dist-packages/:/opt/katib:/opt/katib/pkg/apis/manager/v1beta1/python"
 platforms:
@@ -39,8 +40,6 @@ parts:
         - python3.10-venv
       python-requirements:
         - requirements.txt
-      override-build: |
-        craftctl default
 
     # install required contents
     earlystopping-medianstop:
