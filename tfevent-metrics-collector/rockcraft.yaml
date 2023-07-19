@@ -12,7 +12,8 @@ services:
     override: replace
     summary: "tfevent-metrics-collector service"
     startup: enabled
-    command: "python3 /opt/katib/cmd/metricscollector/v1beta1/tfevent-metricscollector/main.py"
+    command: "python3 main.py"
+    working-dir: /opt/katib/cmd/metricscollector/v1beta1/tfevent-metricscollector/
     environment:
       PYTHONPATH: "/usr/local/lib/python3.10/dist-packages:/opt/katib:/opt/katib/pkg/apis/manager/v1beta1/python:/opt/katib/pkg/metricscollector/v1beta1/tfevent-metricscollector:/opt/katib/pkg/metricscollector/v1beta1/common"
 platforms:
@@ -37,8 +38,6 @@ parts:
         - python3.10-venv
       python-requirements:
         - requirements.txt
-      override-build: |
-        craftctl default
 
     # install required contents
     tfevent-metrics-collector:
