@@ -1,0 +1,61 @@
+# Based on https://github.com/kubeflow/katib/blob/v0.15.0/cmd/katib-controller/v1beta1/Dockerfile
+name: katib-db-manager
+summary: Katib DB Controller
+description: |
+  Katib database manager.
+version: v0.15.0_22.04_1
+license: Apache-2.0
+build-base: ubuntu:22.04
+base: bare
+run-user: _daemon_
+services:
+  katib-db-manager:
+    override: replace
+    summary: "katib-db-manager service"
+    startup: enabled
+    command: "./katib-db-manager"
+    working-dir: /app/
+platforms:
+  amd64:
+
+parts:
+  katib-db-manager:
+    plugin: go
+    source: https://github.com/kubeflow/katib
+    source-type: git
+    source-tag: v0.15.0
+    build-snaps:
+      - go
+    stage-packages:
+      - libc6_libs
+    build-environment:
+      - CGO_ENABLED: "0"
+      - GOOS: "linux"
+      - GOARCH: "amd64"
+    override-build: |
+      set -xe
+      mkdir -p ${CRAFT_PART_INSTALL}/app
+      cd ${CRAFT_PART_SRC}/
+      go mod download all
+      go build -a -o katib-db-manager ./cmd/db-manager/v1beta1
+      install -D -m755 katib-db-manager ${CRAFT_PART_INSTALL}/app/katib-db-manager
+
+  # health check
+  grpc-health-check:
+    plugin: dump
+    source: https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/v0.4.15/grpc_health_probe-linux-amd64
+    source-type: file
+    organize:
+      grpc_health_probe-linux-amd64: bin/grpc_health_probe
+    override-stage: |
+      craftctl default
+      chmod +x ${CRAFT_STAGE}/bin/grpc_health_probe
+
+  security-team-requirement:
+    plugin: nil
+    override-build: |
+      # security requirement
+      # there are no packages installed in `bare` base which is used in this rock
+      mkdir -p ${CRAFT_PART_INSTALL}/usr/share/rocks
+      (echo "# os-release" && cat /etc/os-release && echo "# dpkg-query") \
+       > ${CRAFT_PART_INSTALL}/usr/share/rocks/dpkg.query
