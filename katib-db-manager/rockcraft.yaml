@@ -13,7 +13,8 @@ services:
     override: replace
     summary: "katib-db-manager service"
     startup: enabled
-    command: "/app/katib-db-manager"
+    command: "./katib-db-manager"
+    working-dir: /app/
 platforms:
   amd64:
 
