@@ -13,7 +13,8 @@ services:
     override: replace
     summary: "katib-ui service"
     startup: enabled
-    command: "/app/katib-ui"
+    command: "./katib-ui"
+    working-dir: /app/
 platforms:
   amd64:
 
@@ -38,9 +39,8 @@ parts:
       set -xe
 
       cp -r ${CRAFT_PART_SRC}/pkg/ui/v1beta1/frontend .
-      cd ./frontend && npm ci && npm run build && cd -
-      ls -la ./frontend
-      #rm -rf ./frontend/node_modules
+      cd ./frontend && rm -rf package-lock.json && npm install && npm ci && npm run build && cd ..
+      rm -rf ./frontend/node_modules
       mkdir -p ${CRAFT_PART_INSTALL}/app/build
       cp -r ./frontend/build/* ${CRAFT_PART_INSTALL}/app/build
 
