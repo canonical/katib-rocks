@@ -1,0 +1,75 @@
+# Based on https://github.com/kubeflow/katib/blob/v0.15.0/cmd/suggestion/optuna/v1beta1
+name: suggestion-optuna
+base: ubuntu:22.04
+version: 'v0.15.0_22.04_1'
+summary: "Katib Suggestion Optuna"
+description: |
+      Katib Suggestion Optuna. Optuna is an automatic hyperparameter optimization software framework, particularly designed for machine learning.
+license: GPL-3.0
+run-user: _daemon_
+services:
+  suggestion-optuna:
+    override: replace
+    summary: "suggestion-optuna service"
+    startup: enabled
+    command: "python3 main.py"
+    working-dir: /opt/katib/cmd/suggestion/optuna/v1beta1/
+    environment:
+      PYTHONPATH: "/usr/local/lib/python3.10/dist-packages/:/opt/katib:/opt/katib/pkg/apis/manager/v1beta1/python:/opt/katib/pkg/apis/manager/health/python"
+platforms:
+    amd64:
+
+parts:
+    # install requirements and other dependencies
+    requirements-and-deps:
+      plugin: python
+      source: https://github.com/kubeflow/katib.git
+      source-tag: "v0.15.0"
+      source-depth: 1
+      source-type: git
+      source-subdir: cmd/suggestion/optuna/v1beta1
+      build-packages:
+        - python3-pip
+        - python3.10
+        - python3.10-venv
+        - python3-dev
+      stage-packages:
+        - python3.10
+        - python3.10-venv
+      python-requirements:
+        - requirements.txt
+
+    # install required contents
+    suggestion-optuna:
+      plugin: dump
+      source: https://github.com/kubeflow/katib.git
+      source-tag: "v0.15.0"
+      source-depth: 1
+      source-type: git
+      organize:
+        pkg: opt/katib/pkg
+        cmd/suggestion/optuna/v1beta1/main.py: opt/katib/cmd/suggestion/optuna/v1beta1/main.py
+        cmd/suggestion/optuna/v1beta1/requirements.txt: opt/katib/cmd/suggestion/optuna/v1beta1/requirements.txt
+      stage:
+        - opt/katib/pkg
+        - opt/katib/cmd/suggestion/optuna/v1beta1/main.py
+        - opt/katib/cmd/suggestion/optuna/v1beta1/requirements.txt
+
+    # health check
+    grpc-health-check:
+      plugin: dump
+      source: https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/v0.4.15/grpc_health_probe-linux-amd64
+      source-type: file
+      organize:
+        grpc_health_probe-linux-amd64: bin/grpc_health_probe
+      override-stage: |
+        craftctl default
+        chmod +x ${CRAFT_STAGE}/bin/grpc_health_probe
+
+    security-team-requirement:
+      plugin: nil
+      override-build: |
+        mkdir -p ${CRAFT_PART_INSTALL}/usr/share/rocks
+        (echo "# os-release" && cat /etc/os-release && echo "# dpkg-query" && \
+         dpkg-query --root=${CRAFT_PROJECT_DIR}/../bundles/ubuntu-22.04/rootfs/ -f '${db:Status-Abbrev},${binary:Package},${Version},${source:Package},${Source:Version}\n' -W) \
+         > ${CRAFT_PART_INSTALL}/usr/share/rocks/dpkg.query
