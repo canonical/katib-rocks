@@ -12,7 +12,7 @@ services:
     override: replace
     summary: "Cert genrator service"
     startup: enabled
-    command: katib-cert-generator
+    command: ./katib-cert-generator
     working-dir: /app
 platforms:
   amd64:
