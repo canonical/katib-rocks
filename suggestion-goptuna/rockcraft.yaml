@@ -32,7 +32,7 @@ parts:
       cd /go/src/github.com/kubeflow/katib/ && go mod download -x
       cp -r ${CRAFT_PART_SRC}/cmd ./cmd
       cp -r ${CRAFT_PART_SRC}/pkg ./pkg
-      CGO_ENABLED=0 GOOS=linux GOARCH=${TARGETARCH} go build -a -o goptuna-suggestion ./cmd/suggestion/goptuna/v1beta1
+      CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o goptuna-suggestion ./cmd/suggestion/goptuna/v1beta1
       mkdir -p ${CRAFT_PART_INSTALL}/opt/katib
       cp /go/src/github.com/kubeflow/katib/goptuna-suggestion ${CRAFT_PART_INSTALL}/opt/katib
       chgrp -R 0 ${CRAFT_PART_INSTALL}/opt/katib && chmod -R g+rwX ${CRAFT_PART_INSTALL}/opt/katib
