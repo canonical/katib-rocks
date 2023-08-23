@@ -1,0 +1,44 @@
+# Based on https://github.com/kubeflow/katib/blob/release-0.16/cmd/suggestion/goptuna/v1beta1/Dockerfile
+name: suggestion-goptuna
+summary: Decentralized hyperparameter optimization framework, inspired by Optuna implemented in pure Go
+description: "Katib suggestion goptuna"
+version: "v0.16.0_22.04_1"
+license: Apache-2.0
+base: ubuntu:22.04
+build-base: ubuntu:22.04
+run-user: _daemon_
+services:
+  suggestion-goptuna:
+    override: replace
+    summary: "Katib suggestion goptuna"
+    startup: enabled
+    command: ./goptuna-suggestion
+    working-dir: /opt/katib
+platforms:
+  amd64:
+
+parts:
+  suggestion-goptuna:
+    plugin: go
+    source: https://github.com/kubeflow/katib
+    source-type: git
+    source-tag: "v0.16.0"
+    build-snaps:
+      - go/1.21/stable
+    working-dir: /go/src/github.com/kubeflow/katib
+    override-build: |
+      go.mod .
+      go.sum .
+      go mod download -x
+      CGO_ENABLED=0 GOOS=linux GOARCH=${TARGETARCH} go build -a -o goptuna-suggestion ./cmd/suggestion/goptuna/v1beta1
+      mkdir -p ${CRAFT_PART_INSTALL}/opt/katib
+      cp /go/src/github.com/kubeflow/katib/goptuna-suggestion ${CRAFT_PART_INSTALL}/opt/katib
+      chgrp -R 0 ${CRAFT_PART_INSTALL}/opt/katib && chmod -R g+rwX ${CRAFT_PART_INSTALL}/opt/katib
+
+  security-team-requirement:
+    plugin: nil
+    override-build: |
+      mkdir -p ${CRAFT_PART_INSTALL}/usr/share/rocks
+      (echo "# os-release" && cat /etc/os-release && echo "# dpkg-query" && \
+        dpkg-query --root=${CRAFT_PROJECT_DIR}/../bundles/ubuntu-22.04/rootfs/ -f '${db:Status-Abbrev},${binary:Package},${Version},${source:Package},${Source:Version}\n' -W) \
+        > ${CRAFT_PART_INSTALL}/usr/share/rocks/dpkg.query
