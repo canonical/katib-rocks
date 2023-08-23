@@ -22,14 +22,16 @@ parts:
     plugin: go
     source: https://github.com/kubeflow/katib
     source-type: git
-    source-tag: "v0.16.0"
+    source-tag: "v0.16.0-rc.1"
     build-snaps:
       - go/1.21/stable
-    working-dir: /go/src/github.com/kubeflow/katib
     override-build: |
-      go.mod .
-      go.sum .
-      go mod download -x
+      mkdir -p /go/src/github.com/kubeflow/katib/
+      cp go.mod /go/src/github.com/kubeflow/katib/
+      cp go.sum /go/src/github.com/kubeflow/katib/
+      cd /go/src/github.com/kubeflow/katib/ && go mod download -x
+      cp -r ${CRAFT_PART_SRC}/cmd ./cmd
+      cp -r ${CRAFT_PART_SRC}/pkg ./pkg
       CGO_ENABLED=0 GOOS=linux GOARCH=${TARGETARCH} go build -a -o goptuna-suggestion ./cmd/suggestion/goptuna/v1beta1
       mkdir -p ${CRAFT_PART_INSTALL}/opt/katib
       cp /go/src/github.com/kubeflow/katib/goptuna-suggestion ${CRAFT_PART_INSTALL}/opt/katib
