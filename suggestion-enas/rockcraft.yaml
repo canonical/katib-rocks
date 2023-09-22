@@ -1,4 +1,4 @@
-# Based on https://github.com/kubeflow/katib/blob/v0.16.0/cmd/suggestion/nas/enas/v1beta1
+# Based on https://github.com/kubeflow/katib/blob/v0.16.0-rc.1/cmd/suggestion/nas/enas/v1beta1/Dockerfile
 name: suggestion-enas
 base: ubuntu:22.04
 version: 'v0.16.0_22.04_1'

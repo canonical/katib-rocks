@@ -1,7 +1,7 @@
-# Based on https://github.com/kubeflow/katib/blob/v0.15.0/cmd/suggestion/pbt/v1beta1
+# Based on https://github.com/kubeflow/katib/blob/v0.16.0-rc.1/cmd/suggestion/pbt/v1beta1/Dockerfile
 name: suggestion-pbt
 base: ubuntu:22.04
-version: 'v0.15.0_22.04_1'
+version: 'v0.16.0_22.04_1'
 summary: "Katib Suggestion PBT"
 description: |
       Katib Suggestion PBT. Population Based Training, a simple asynchronous optimisation algorithm which effectively utilises a fixed computational budget to jointly optimise a population of models and their hyperparameters to maximise performance.
@@ -24,7 +24,7 @@ parts:
     requirements-and-deps:
       plugin: python
       source: https://github.com/kubeflow/katib.git
-      source-tag: "v0.15.0"
+      source-tag: "v0.16.0-rc.1"
       source-depth: 1
       source-type: git
       source-subdir: cmd/suggestion/pbt/v1beta1
@@ -43,7 +43,7 @@ parts:
     suggestion-pbt:
       plugin: dump
       source: https://github.com/kubeflow/katib.git
-      source-tag: "v0.15.0"
+      source-tag: "v0.16.0-rc.1"
       source-depth: 1
       source-type: git
       organize:
@@ -54,17 +54,6 @@ parts:
         - opt/katib/pkg
         - opt/katib/cmd/suggestion/pbt/v1beta1/main.py
         - opt/katib/cmd/suggestion/pbt/v1beta1/requirements.txt
-
-    # health check
-    grpc-health-check:
-      plugin: dump
-      source: https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/v0.4.15/grpc_health_probe-linux-amd64
-      source-type: file
-      organize:
-        grpc_health_probe-linux-amd64: bin/grpc_health_probe
-      override-stage: |
-        craftctl default
-        chmod +x ${CRAFT_STAGE}/bin/grpc_health_probe
 
     security-team-requirement:
       plugin: nil
