@@ -1,4 +1,4 @@
-# https://github.com/kubeflow/katib/blob/v0.15.0/cmd/ui/v1beta1
+# Based on https://github.com/kubeflow/katib/blob/v0.15.0/cmd/ui/v1beta1
 name: katib-ui
 summary: Katib UI
 description: |
