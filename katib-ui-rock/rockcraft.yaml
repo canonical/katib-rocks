@@ -99,3 +99,12 @@ parts:
     override-prime: |
       mkdir -p $CRAFT_PRIME/app
       cp $CRAFT_PART_BUILD/katib-ui $CRAFT_PRIME/app
+
+  security-team-requirement:
+    plugin: nil
+    override-build: |
+      # security requirement
+      # there are no packages installed in `bare` base which is used in this rock
+      mkdir -p ${CRAFT_PART_INSTALL}/usr/share/rocks
+      (echo "# os-release" && cat /etc/os-release && echo "# dpkg-query") \
+       > ${CRAFT_PART_INSTALL}/usr/share/rocks/dpkg.query
