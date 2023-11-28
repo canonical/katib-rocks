@@ -3,9 +3,7 @@ name: katib-ui
 summary: Katib UI
 description: |
   Katib UI.
-# TODO: set version
-# version: v0.15.0_22.04_1
-version: todo
+version: v0.16.0
 license: Apache-2.0
 build-base: ubuntu@22.04
 base: bare
