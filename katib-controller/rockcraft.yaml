@@ -1,4 +1,4 @@
-# Based on https://github.com/kubeflow/katib/blob/v0.16.0-rc.1/cmd/katib-controller/v1beta1/Dockerfile
+# Based on https://github.com/kubeflow/katib/blob/v0.16.0/cmd/katib-controller/v1beta1/Dockerfile
 name: katib-controller
 summary: Katib AutoML Controller
 description: |
@@ -27,7 +27,7 @@ parts:
     plugin: go
     source: https://github.com/kubeflow/katib
     source-type: git
-    source-tag: v0.16.0-rc.1
+    source-tag: v0.16.0
     build-snaps:
       - go
     stage-packages:

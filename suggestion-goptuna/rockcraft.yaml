@@ -22,7 +22,7 @@ parts:
     plugin: go
     source: https://github.com/kubeflow/katib
     source-type: git
-    source-tag: "v0.16.0-rc.1"
+    source-tag: "v0.16.0"
     build-snaps:
       - go/1.21/stable
     override-build: |

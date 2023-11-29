@@ -1,4 +1,4 @@
-# Based on https://github.com/kubeflow/katib/blob/v0.16.0-rc.1/cmd/suggestion/pbt/v1beta1/Dockerfile
+# Based on https://github.com/kubeflow/katib/blob/v0.16.0/cmd/suggestion/pbt/v1beta1/Dockerfile
 name: suggestion-pbt
 base: ubuntu:22.04
 version: 'v0.16.0_22.04_1'
@@ -24,7 +24,7 @@ parts:
     requirements-and-deps:
       plugin: python
       source: https://github.com/kubeflow/katib.git
-      source-tag: "v0.16.0-rc.1"
+      source-tag: "v0.16.0"
       source-depth: 1
       source-type: git
       source-subdir: cmd/suggestion/pbt/v1beta1
@@ -43,7 +43,7 @@ parts:
     suggestion-pbt:
       plugin: dump
       source: https://github.com/kubeflow/katib.git
-      source-tag: "v0.16.0-rc.1"
+      source-tag: "v0.16.0"
       source-depth: 1
       source-type: git
       organize:
