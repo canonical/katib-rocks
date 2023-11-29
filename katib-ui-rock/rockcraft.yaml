@@ -23,12 +23,10 @@ parts:
     plugin: nil
     source: https://github.com/kubeflow/kubeflow
     source-type: git
-    # Set source-tag here to the commit cited in https://github.com/kubeflow/katib/blob/master/pkg/ui/v1beta1/frontend/COMMIT
+    # Set source-commit here to the commit cited in 
+    # https://github.com/kubeflow/katib/blob/master/pkg/ui/v1beta1/frontend/COMMIT
     # for this Katib release
-    # Note: Katib 0.16.0 cannot build with Kubeflow v1.8-branch because Kubeflow refactored this lib
     source-commit: 046c6d3c8301a95a2809c0d927bbbf72638dd639
-    # Omit source-depth because we're cloning a commit
-    # source-depth: 1
     build-environment:
       # suppress analytics collection
       - NG_CLI_ANALYTICS: false
@@ -78,7 +76,9 @@ parts:
     source-type: git
     source-tag: v0.16.0
     build-snaps:
-      - go/1.20/stable
+      # Use go version that satisfies requirements in
+      # https://github.com/kubeflow/katib/blob/v0.16.0/docs/developer-guide.md#requirements
+      - go/1.21/stable
     build-environment:
       - CGO_ENABLED: 0
       - GOOS: linux
