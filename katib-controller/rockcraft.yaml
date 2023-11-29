@@ -8,7 +8,7 @@ description: |
 
   Katib can perform training jobs using any Kubernetes Custom Resources with out of the box support for Kubeflow Training Operator, Argo Workflows, Tekton Pipelines and many more.
 
-version: v0.16.0_22.04_1
+version: v0.16.0-22.04-2
 license: Apache-2.0
 build-base: ubuntu:22.04
 base: bare

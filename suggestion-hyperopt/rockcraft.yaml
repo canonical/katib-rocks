@@ -1,7 +1,7 @@
 # Based on https://github.com/kubeflow/katib/blob/v0.16.0/cmd/suggestion/hyperopt/v1beta1/Dockerfile
 name: suggestion-hyperopt
 base: ubuntu:22.04
-version: 'v0.16.0_22.04_1'
+version: 'v0.16.0-22.04-2'
 summary: "Katib Suggestion Hyperopt"
 description: |
     Ktibe Suggetion Hyperopt. Hyperopt is a Python library for serial and parallel optimization over awkward search spaces, which may include real-valued, discrete, and conditional dimensions.

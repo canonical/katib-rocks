@@ -1,7 +1,7 @@
 # Based on https://github.com/kubeflow/katib/blob/v0.16.0/cmd/suggestion/skopt/v1beta1/Dockerfile
 name: suggestion-skopt
 base: ubuntu:22.04
-version: 'v0.16.0_22.04_1'
+version: 'v0.16.0-22.04-2'
 summary: "Katib Suggestion skopt"
 description: |
       Katib Suggestion skopt. Scikit-Optimize, or skopt, is a simple and efficient library to minimize expensive and noisy black-box functions. It implements several methods for sequential model-based optimization.

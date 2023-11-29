@@ -2,7 +2,7 @@
 name: suggestion-goptuna
 summary: Decentralized hyperparameter optimization framework, inspired by Optuna implemented in pure Go
 description: "Katib suggestion goptuna"
-version: "v0.16.0_22.04_1"
+version: "v0.16.0-22.04-2"
 license: Apache-2.0
 base: ubuntu:22.04
 build-base: ubuntu:22.04
