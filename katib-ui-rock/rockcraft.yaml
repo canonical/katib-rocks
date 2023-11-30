@@ -62,8 +62,8 @@ parts:
       # Pull only the files we need for the build from src
       cp $CRAFT_PART_SRC/pkg/ui/v1beta1/frontend/package*.json ./
       npm ci
-      cp -r $CRAFT_STAGE/frontend-lib/dist/kubeflow ./node_modules/kubeflow
       cp -r $CRAFT_PART_SRC/pkg/ui/v1beta1/frontend/* .
+      cp -r $CRAFT_STAGE/frontend-lib/dist/kubeflow ./node_modules/kubeflow
       npm run build:prod
 
     override-prime: |
