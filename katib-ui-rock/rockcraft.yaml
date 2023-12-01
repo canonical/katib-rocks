@@ -1,11 +1,11 @@
-# Based on https://github.com/kubeflow/katib/blob/v0.15.0/cmd/ui/v1beta1
+# Based on https://github.com/kubeflow/katib/blob/v0.16.0/cmd/ui/v1beta1/Dockerfile
 name: katib-ui
 summary: Katib UI
 description: |
   Katib UI.
-version: v0.15.0_22.04_1
+version: v0.16.0
 license: Apache-2.0
-build-base: ubuntu:22.04
+build-base: ubuntu@22.04
 base: bare
 run-user: _daemon_
 services:
@@ -19,36 +19,86 @@ platforms:
   amd64:
 
 parts:
-  katib-ui:
+  frontend-lib:
+    plugin: nil
+    source: https://github.com/kubeflow/kubeflow
+    source-type: git
+    # Set source-commit here to the commit cited in 
+    # https://github.com/kubeflow/katib/blob/master/pkg/ui/v1beta1/frontend/COMMIT
+    # for this Katib release
+    source-commit: 046c6d3c8301a95a2809c0d927bbbf72638dd639
+    build-environment:
+      # suppress analytics collection
+      - NG_CLI_ANALYTICS: false
+    build-snaps:
+      - node/12/stable
+    override-build: |
+      # Clean the build dir so we don't accidentally use files we didn't intend
+      rm -rf ./*
+
+      # Pull only the files we need for the build from src, and build
+      cp $CRAFT_PART_SRC/components/crud-web-apps/common/frontend/kubeflow-common-lib/package*.json ./
+      npm ci
+      cp -r $CRAFT_PART_SRC/components/crud-web-apps/common/frontend/kubeflow-common-lib/* ./
+      npm run build
+      
+    override-stage: |
+      mkdir -p $CRAFT_STAGE/frontend-lib/dist
+      cp -r $CRAFT_PART_BUILD/dist/kubeflow $CRAFT_STAGE/frontend-lib/dist/kubeflow
+
+  frontend:
+    after: [frontend-lib]
+    plugin: nil
+    source: https://github.com/kubeflow/katib
+    source-type: git
+    source-tag: v0.16.0
+    source-depth: 1
+    build-snaps:
+      - node/12/stable
+    override-build: |
+      # Clean the build dir so we don't accidentally use files we didn't intend
+      rm -rf ./*
+
+      # Pull only the files we need for the build from src
+      cp $CRAFT_PART_SRC/pkg/ui/v1beta1/frontend/package*.json ./
+      npm ci
+      cp -r $CRAFT_PART_SRC/pkg/ui/v1beta1/frontend/* .
+      cp -r $CRAFT_STAGE/frontend-lib/dist/kubeflow ./node_modules/kubeflow
+      npm run build:prod
+
+    override-prime: |
+      mkdir -p $CRAFT_PRIME/app/build
+      cp -r $CRAFT_PART_BUILD/dist/static $CRAFT_PRIME/app/build/static
+
+  backend:
     plugin: go
     source: https://github.com/kubeflow/katib
     source-type: git
-    source-tag: v0.15.0
+    source-tag: v0.16.0
     build-snaps:
-      - go
-      - curl
-    build-packages:
-      - npm
-    stage-packages:
-      - libc6_libs
+      # Use go version that satisfies requirements in
+      # https://github.com/kubeflow/katib/blob/v0.16.0/docs/developer-guide.md#requirements
+      - go/1.21/stable
     build-environment:
-      - CGO_ENABLED: "0"
-      - GOOS: "linux"
-      - GOARCH: "amd64"
+      - CGO_ENABLED: 0
+      - GOOS: linux
     override-build: |
-      set -xe
+      # Clean the build dir so we don't accidentally use files we didn't intend
+      rm -rf ./*
+      
+      # Pull only the files we need for the build from src
+      cp -r $CRAFT_PART_SRC/go.mod ./
+      cp -r $CRAFT_PART_SRC/go.sum ./
+      go mod download -x
+      cp -r $CRAFT_PART_SRC/cmd ./cmd
+      cp -r $CRAFT_PART_SRC/pkg ./pkg
 
-      cp -r ${CRAFT_PART_SRC}/pkg/ui/v1beta1/frontend .
-      cd ./frontend && rm -rf package-lock.json && npm install && npm ci && npm run build && cd ..
-      rm -rf ./frontend/node_modules
-      mkdir -p ${CRAFT_PART_INSTALL}/app/build
-      cp -r ./frontend/build/* ${CRAFT_PART_INSTALL}/app/build
-
-      mkdir -p ${CRAFT_PART_INSTALL}/app
-      cd ${CRAFT_PART_SRC}/
-      go mod download all
+      # Build
       go build -a -o katib-ui ./cmd/ui/v1beta1
-      install -D -m755 katib-ui ${CRAFT_PART_INSTALL}/app/katib-ui
+
+    override-prime: |
+      mkdir -p $CRAFT_PRIME/app
+      cp $CRAFT_PART_BUILD/katib-ui $CRAFT_PRIME/app
 
   security-team-requirement:
     plugin: nil
