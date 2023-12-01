@@ -1,6 +1,6 @@
 # Based on https://github.com/kubeflow/katib/blob/v0.16.0/cmd/suggestion/pbt/v1beta1/Dockerfile
 name: suggestion-pbt
-base: ubuntu:22.04
+base: ubuntu@22.04
 version: 'v0.16.0-22.04-2'
 summary: "Katib Suggestion PBT"
 description: |

@@ -1,6 +1,6 @@
 # Based on https://github.com/kubeflow/katib/blob/v0.16.0/cmd/metricscollector/v1beta1/tfevent-metricscollector/Dockerfile
 name: tfevent-metrics-collector
-base: ubuntu:22.04
+base: ubuntu@22.04
 version: 'v0.16.0-22.04-2'
 summary: Metrics collector for TF Events for Katib.
 description: |

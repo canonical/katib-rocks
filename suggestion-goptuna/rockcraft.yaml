@@ -4,8 +4,8 @@ summary: Decentralized hyperparameter optimization framework, inspired by Optuna
 description: "Katib suggestion goptuna"
 version: "v0.16.0-22.04-2"
 license: Apache-2.0
-base: ubuntu:22.04
-build-base: ubuntu:22.04
+base: ubuntu@22.04
+build-base: ubuntu@22.04
 run-user: _daemon_
 services:
   suggestion-goptuna:

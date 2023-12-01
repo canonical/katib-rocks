@@ -5,7 +5,7 @@ description: |
   Katib UI.
 version: v0.15.0_22.04_1
 license: Apache-2.0
-build-base: ubuntu:22.04
+build-base: ubuntu@22.04
 base: bare
 run-user: _daemon_
 services:

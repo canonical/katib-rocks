@@ -10,7 +10,7 @@ description: |
 
 version: v0.16.0-22.04-2
 license: Apache-2.0
-build-base: ubuntu:22.04
+build-base: ubuntu@22.04
 base: bare
 run-user: _daemon_
 services:
