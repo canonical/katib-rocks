@@ -1,7 +1,7 @@
-# Based on https://github.com/kubeflow/katib/blob/v0.16.0-rc.1/cmd/suggestion/hyperband/v1beta1/Dockerfile
+# Based on https://github.com/kubeflow/katib/blob/v0.16.0/cmd/suggestion/hyperband/v1beta1/Dockerfile
 name: suggestion-hyperband
-base: ubuntu:22.04
-version: 'v0.16.0_22.04_1'
+base: ubuntu@22.04
+version: 'v0.16.0-22.04-2'
 summary: "Katib Suggestion Hyperband"
 description: |
     Katib suggestion Hyperband. Hyperband focuses on early stopping as a strategy for optimizing resource allocation.
@@ -24,7 +24,7 @@ parts:
     requirements-and-deps:
       plugin: python
       source: https://github.com/kubeflow/katib.git
-      source-tag: "v0.16.0-rc.1"
+      source-tag: "v0.16.0"
       source-depth: 1
       source-type: git
       source-subdir: cmd/suggestion/hyperband/v1beta1
@@ -43,7 +43,7 @@ parts:
     suggestion-hyperband:
       plugin: dump
       source: https://github.com/kubeflow/katib.git
-      source-tag: "v0.16.0-rc.1"
+      source-tag: "v0.16.0"
       source-depth: 1
       source-type: git
       organize:
