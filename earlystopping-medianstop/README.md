@@ -1,2 +1,2 @@
 # earlystopping-medianstop
-ROCK for Kubeflow Katib earlystopping-medianstop
+rock for Kubeflow Katib earlystopping-medianstop
