@@ -1,9 +1,9 @@
-# Based on https://github.com/kubeflow/katib/blob/v0.16.0/cmd/metricscollector/v1beta1/file-metricscollector/Dockerfile
+# Based on https://github.com/kubeflow/katib/blob/v0.17.0/cmd/metricscollector/v1beta1/file-metricscollector/Dockerfile
 name: file-metrics-collector
 summary: Metrics collector for file info for Katib.
 description: |
   Collects metrics from specified file.
-version: v0.16.0-22.04-2
+version: v0.17.0
 license: Apache-2.0
 build-base: ubuntu@22.04
 base: bare
@@ -22,7 +22,7 @@ parts:
     plugin: go
     source: https://github.com/kubeflow/katib
     source-type: git
-    source-tag: v0.16.0
+    source-tag: v0.17.0
     build-snaps:
       - go
     stage-packages:
