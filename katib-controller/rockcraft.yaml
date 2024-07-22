@@ -1,4 +1,4 @@
-# Based on https://github.com/kubeflow/katib/blob/v0.16.0/cmd/katib-controller/v1beta1/Dockerfile
+# Based on https://github.com/kubeflow/katib/blob/v0.17.0/cmd/katib-controller/v1beta1/Dockerfile
 name: katib-controller
 summary: Katib AutoML Controller
 description: |
@@ -8,7 +8,7 @@ description: |
 
   Katib can perform training jobs using any Kubernetes Custom Resources with out of the box support for Kubeflow Training Operator, Argo Workflows, Tekton Pipelines and many more.
 
-version: v0.16.0-22.04-2
+version: v0.17.0
 license: Apache-2.0
 build-base: ubuntu@22.04
 base: bare
@@ -27,7 +27,8 @@ parts:
     plugin: go
     source: https://github.com/kubeflow/katib
     source-type: git
-    source-tag: v0.16.0
+    source-tag: v0.17.0
+    source-subdir: cmd/katib-controller/v1beta1
     build-snaps:
       - go
     stage-packages:
@@ -37,11 +38,9 @@ parts:
       - GOOS: "linux"
       - GOARCH: "amd64"
     override-build: |
-      set -xe
-      cd ${CRAFT_PART_SRC}/
+      cd $CRAFT_PART_SRC_WORK
       go mod download all
-      go build -a -o katib-controller ./cmd/katib-controller/v1beta1
-      install -D -m755 katib-controller ${CRAFT_PART_INSTALL}/katib-controller
+      go build -a -o ${CRAFT_PART_INSTALL}/katib-controller $CRAFT_PART_SRC_WORK
 
   security-team-requirement:
     plugin: nil
