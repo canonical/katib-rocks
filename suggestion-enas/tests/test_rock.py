@@ -49,7 +49,7 @@ def test_rock(rock_test_env):
             "exec",
             "ls",
             "-la",
-            "/opt/katib/cmd/suggestion/nas/enas/v1beta1/main.py",
+            "opt/katib/cmd/suggestion/nas/enas/v1beta1/main.py",
         ],
         check=True,
     )
