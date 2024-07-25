@@ -49,7 +49,7 @@ def test_rock(rock_test_env):
             "exec",
             "ls",
             "-la",
-            "opt/katib/cmd/metricscollector/v1beta1/tfevent-metricscollector/main.py,
+            "/opt/katib/cmd/metricscollector/v1beta1/tfevent-metricscollector/main.py",
         ],
         check=True,
     )

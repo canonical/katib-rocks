@@ -49,7 +49,7 @@ def test_rock(rock_test_env):
             "exec",
             "ls",
             "-la",
-            "app/katib-db-manager",
+            "/app/katib-db-manager",
         ],
         check=True,
     )
