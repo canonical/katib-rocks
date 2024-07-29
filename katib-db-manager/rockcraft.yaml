@@ -1,12 +1,11 @@
-# Based on https://github.com/kubeflow/katib/blob/v0.16.0/cmd/db-manager/v1beta1/Dockerfile
+# Based on https://github.com/kubeflow/katib/blob/v0.17.0/cmd/db-manager/v1beta1/Dockerfile
 name: katib-db-manager
 summary: Katib DB Controller
 description: |
   Katib database manager.
-version: v0.16.0-22.04-2
+version: v0.17.0
 license: Apache-2.0
-build-base: ubuntu@22.04
-base: bare
+base: ubuntu@22.04
 run-user: _daemon_
 services:
   katib-db-manager:
@@ -23,7 +22,7 @@ parts:
     plugin: go
     source: https://github.com/kubeflow/katib
     source-type: git
-    source-tag: v0.16.0
+    source-tag: v0.17.0
     build-snaps:
       - go
     stage-packages:
@@ -54,8 +53,7 @@ parts:
   security-team-requirement:
     plugin: nil
     override-build: |
-      # security requirement
-      # there are no packages installed in `bare` base which is used in this rock
       mkdir -p ${CRAFT_PART_INSTALL}/usr/share/rocks
-      (echo "# os-release" && cat /etc/os-release && echo "# dpkg-query") \
-       > ${CRAFT_PART_INSTALL}/usr/share/rocks/dpkg.query
+      (echo "# os-release" && cat /etc/os-release && echo "# dpkg-query" && \
+      dpkg-query --root=${CRAFT_PROJECT_DIR}/../bundles/ubuntu-22.04/rootfs/ -f '${db:Status-Abbrev},${binary:Package},${Version},${source:Package},${Source:Version}\n' -W) \
+      > ${CRAFT_PART_INSTALL}/usr/share/rocks/dpkg.query
