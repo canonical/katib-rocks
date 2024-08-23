@@ -67,7 +67,7 @@ parts:
 
     override-prime: |
       mkdir -p $CRAFT_PRIME/app/build
-      cp -r $CRAFT_PART_BUILD/dist/static $CRAFT_PRIME/app/build/static
+      cp -r $CRAFT_PART_BUILD/dist/static $CRAFT_PRIME/app/build
 
   backend:
     plugin: go
