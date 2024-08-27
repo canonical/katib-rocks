@@ -59,7 +59,8 @@ def test_rock(rock_test_env):
             "run",
             LOCAL_ROCK_IMAGE,
             "exec",
-            "cat",
+            "ls",
+            "-la"
             "/app/build/static",
         ],
         check=True,
