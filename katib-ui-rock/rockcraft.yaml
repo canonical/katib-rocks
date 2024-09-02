@@ -1,12 +1,11 @@
-# Based on https://github.com/kubeflow/katib/blob/v0.16.0/cmd/ui/v1beta1/Dockerfile
+# Based on https://github.com/kubeflow/katib/blob/v0.17.0/cmd/ui/v1beta1/Dockerfile
 name: katib-ui
 summary: Katib UI
 description: |
   Katib UI.
-version: v0.16.0
+version: v0.17.0
 license: Apache-2.0
-build-base: ubuntu@22.04
-base: bare
+base: ubuntu@22.04
 run-user: _daemon_
 services:
   katib-ui:
@@ -51,7 +50,7 @@ parts:
     plugin: nil
     source: https://github.com/kubeflow/katib
     source-type: git
-    source-tag: v0.16.0
+    source-tag: v0.17.0
     source-depth: 1
     build-snaps:
       - node/12/stable
@@ -74,10 +73,10 @@ parts:
     plugin: go
     source: https://github.com/kubeflow/katib
     source-type: git
-    source-tag: v0.16.0
+    source-tag: v0.17.0
     build-snaps:
       # Use go version that satisfies requirements in
-      # https://github.com/kubeflow/katib/blob/v0.16.0/docs/developer-guide.md#requirements
+      # https://github.com/kubeflow/katib/blob/v0.17.0/docs/developer-guide.md#requirements
       - go/1.21/stable
     build-environment:
       - CGO_ENABLED: 0
@@ -108,3 +107,4 @@ parts:
       mkdir -p ${CRAFT_PART_INSTALL}/usr/share/rocks
       (echo "# os-release" && cat /etc/os-release && echo "# dpkg-query") \
        > ${CRAFT_PART_INSTALL}/usr/share/rocks/dpkg.query
+
