@@ -12,7 +12,8 @@ services:
     override: replace
     summary: "file-metrics-collector service"
     startup: enabled
-    command: "/app/file-metricscollector"
+    command: "/app/file-metricscollector [ ]"
+entrypoint-service: file-metrics-collector
 platforms:
   amd64:
 
