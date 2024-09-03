@@ -39,21 +39,22 @@ parts:
       python-requirements:
         - requirements.txt
 
-    # install required contents
     suggestion-enas:
-      plugin: dump
+      plugin: nil
       source: https://github.com/kubeflow/katib.git
       source-tag: "v0.17.0"
       source-depth: 1
       source-type: git
-      organize:
-        pkg: opt/katib/pkg
-        cmd/suggestion/nas/enas/v1beta1/main.py: opt/katib/cmd/suggestion/nas/enas/v1beta1/main.py
-        cmd/suggestion/nas/enas/v1beta1/requirements.txt: opt/katib/cmd/suggestion/nas/enas/v1beta1/requirements.txt
-      stage:
-        - opt/katib/pkg
-        - opt/katib/cmd/suggestion/nas/enas/v1beta1/main.py
-        - opt/katib/cmd/suggestion/nas/enas/v1beta1/requirements.txt
+      override-build: |
+        # Move files to dedicated location
+        mkdir -p ${CRAFT_PART_INSTALL}/opt/katib/pkg
+        mkdir -p ${CRAFT_PART_INSTALL}/opt/katib/cmd/suggestion/nas/enas/v1beta1
+        cp -r pkg/* ${CRAFT_PART_INSTALL}/opt/katib/pkg
+        cp -r cmd/suggestion/nas/enas/v1beta1/* ${CRAFT_PART_INSTALL}/opt/katib/cmd/suggestion/nas/enas/v1beta1
+
+        # Change permissions on the folder for the _daemon_ user
+        chown -R 584792:584792 ${CRAFT_PART_INSTALL}/opt/katib/cmd/suggestion/nas/enas/v1beta1
+        chmod -R 755 ${CRAFT_PART_INSTALL}/opt/katib/cmd/suggestion/nas/enas/v1beta1
 
     security-team-requirement:
       plugin: nil
