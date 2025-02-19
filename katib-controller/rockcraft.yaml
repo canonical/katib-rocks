@@ -1,4 +1,4 @@
-# Based on https://github.com/kubeflow/katib/blob/v0.17.0/cmd/katib-controller/v1beta1/Dockerfile
+# Based on https://github.com/kubeflow/katib/blob/v0.18.0-rc.0/cmd/katib-controller/v1beta1/Dockerfile
 name: katib-controller
 summary: Katib AutoML Controller
 description: |
@@ -8,7 +8,7 @@ description: |
 
   Katib can perform training jobs using any Kubernetes Custom Resources with out of the box support for Kubeflow Training Operator, Argo Workflows, Tekton Pipelines and many more.
 
-version: v0.17.0
+version: v0.18.0
 license: Apache-2.0
 base: ubuntu@22.04
 run-user: _daemon_
@@ -26,7 +26,7 @@ parts:
     plugin: go
     source: https://github.com/kubeflow/katib
     source-type: git
-    source-tag: v0.17.0
+    source-tag: v0.18.0-rc.0
     source-subdir: cmd/katib-controller/v1beta1
     build-snaps:
       - go
