@@ -3,7 +3,7 @@ name: katib-db-manager
 summary: Katib DB Controller
 description: |
   Katib database manager.
-version: v0.18.0
+version: v0.18.0-rc.0
 license: Apache-2.0
 base: ubuntu@22.04
 run-user: _daemon_
