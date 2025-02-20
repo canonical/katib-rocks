@@ -28,7 +28,7 @@ parts:
     source-commit: 046c6d3c8301a95a2809c0d927bbbf72638dd639
     build-environment:
       # suppress analytics collection
-      - NG_CLI_ANALYTICS: false
+      - NG_CLI_ANALYTICS: "false"
     build-snaps:
       - node/16/stable
     override-build: |
