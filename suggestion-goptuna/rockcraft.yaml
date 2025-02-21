@@ -1,8 +1,8 @@
-# Based on https://github.com/kubeflow/katib/blob/v0.17.0/cmd/suggestion/goptuna/v1beta1/Dockerfile
+# Based on https://github.com/kubeflow/katib/blob/v0.18.0-rc.0/cmd/suggestion/goptuna/v1beta1/Dockerfile
 name: suggestion-goptuna
 summary: Decentralized hyperparameter optimization framework, inspired by Optuna implemented in pure Go
 description: "Katib suggestion goptuna"
-version: "v0.17.0"
+version: "v0.18.0-rc.0"
 license: Apache-2.0
 base: ubuntu@22.04
 build-base: ubuntu@22.04
@@ -22,7 +22,7 @@ parts:
     plugin: go
     source: https://github.com/kubeflow/katib
     source-type: git
-    source-tag: "v0.17.0"
+    source-tag: "v0.18.0-rc.0"
     build-snaps:
       - go/1.21/stable
     override-build: |
