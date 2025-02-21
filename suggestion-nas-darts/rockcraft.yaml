@@ -1,7 +1,7 @@
-# Based on https://github.com/kubeflow/katib/blob/v0.17.0/cmd/suggestion/nas/darts/v1beta1
+# Based on https://github.com/kubeflow/katib/blob/v0.18.0-rc.0/cmd/suggestion/nas/darts/v1beta1
 name: suggestion-nas-darts
 base: ubuntu@22.04
-version: 'v0.17.0'
+version: 'v0.18.0-rc.0'
 summary: "Katib Suggestion NAS DARTS"
 description: |
       Katib Differentiable Architecture Search implementation.
@@ -24,7 +24,7 @@ parts:
     requirements-and-deps:
       plugin: python
       source: https://github.com/kubeflow/katib.git
-      source-tag: "v0.17.0"
+      source-tag: "v0.18.0-rc.0"
       source-depth: 1
       source-type: git
       source-subdir: cmd/suggestion/nas/darts/v1beta1
@@ -43,7 +43,7 @@ parts:
     suggestion-nas-darts:
       plugin: dump
       source: https://github.com/kubeflow/katib.git
-      source-tag: "v0.17.0"
+      source-tag: "v0.18.0-rc.0"
       source-depth: 1
       source-type: git
       organize:
