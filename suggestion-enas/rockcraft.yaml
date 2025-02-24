@@ -12,7 +12,7 @@ services:
     override: replace
     summary: "suggestion-enas service"
     startup: enabled
-    command: "python3.11 main.py"
+    command: "python3 main.py"
     working-dir: /opt/katib/cmd/suggestion/nas/enas/v1beta1/
     environment:
       PYTHONPATH: "/usr/local/lib/python3.11/dist-packages/:/opt/katib:/opt/katib/pkg/apis/manager/v1beta1/python:/opt/katib/pkg/apis/manager/health/python"
@@ -40,6 +40,11 @@ parts:
         # The Python version must match the one used in upstream
         # https://github.com/kubeflow/katib/blob/v0.18.0-rc.0/cmd/suggestion/nas/enas/v1beta1/Dockerfile#L1
         - PARTS_PYTHON_INTERPRETER: "python3.11"
+      override-build: |
+        craftctl default
+        # Ensure Python 3.11 is the default version
+        mkdir -p ${CRAFT_PART_INSTALL}/usr/bin/
+        ln -fs /usr/bin/python3.11 ${CRAFT_PART_INSTALL}/usr/bin/python3
 
     suggestion-enas:
       plugin: dump
