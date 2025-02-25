@@ -1,9 +1,9 @@
-# Based on https://github.com/kubeflow/katib/blob/v0.17.0/cmd/ui/v1beta1/Dockerfile
+# Based on https://github.com/kubeflow/katib/blob/v0.18.0-rc.0/cmd/ui/v1beta1/Dockerfile
 name: katib-ui
 summary: Katib UI
 description: |
   Katib UI.
-version: v0.17.0
+version: v0.18.0
 license: Apache-2.0
 base: ubuntu@22.04
 run-user: _daemon_
@@ -23,21 +23,29 @@ parts:
     source: https://github.com/kubeflow/kubeflow
     source-type: git
     # Set source-commit here to the commit cited in 
-    # https://github.com/kubeflow/katib/blob/master/pkg/ui/v1beta1/frontend/COMMIT
+    # https://github.com/kubeflow/katib/blob/v0.18.0-rc.0/pkg/ui/v1beta1/frontend/COMMIT
     # for this Katib release
-    source-commit: 046c6d3c8301a95a2809c0d927bbbf72638dd639
+    source-commit: 78969ee8246a6f11295378fc61273b1f2dbe07a8
     build-environment:
       # suppress analytics collection
-      - NG_CLI_ANALYTICS: false
+      - NG_CLI_ANALYTICS: "false"
     build-snaps:
-      - node/12/stable
+      - node/16/stable
     override-build: |
       # Clean the build dir so we don't accidentally use files we didn't intend
       rm -rf ./*
 
       # Pull only the files we need for the build from src, and build
       cp $CRAFT_PART_SRC/components/crud-web-apps/common/frontend/kubeflow-common-lib/package*.json ./
-      npm ci
+      npm config set fetch-retry-mintimeout 200000 && \
+      npm config set fetch-retry-maxtimeout 1200000 && \
+      npm config get registry && \
+      npm config set registry https://registry.npmjs.org/ && \
+      npm config delete https-proxy && \
+      npm config set loglevel verbose && \
+      npm cache clean --force && \
+      npm ci --force --prefer-offline --no-audit
+
       cp -r $CRAFT_PART_SRC/components/crud-web-apps/common/frontend/kubeflow-common-lib/* ./
       npm run build
       
@@ -50,17 +58,25 @@ parts:
     plugin: nil
     source: https://github.com/kubeflow/katib
     source-type: git
-    source-tag: v0.17.0
+    source-tag: v0.18.0-rc.0
     source-depth: 1
     build-snaps:
-      - node/12/stable
+      - node/16/stable
     override-build: |
       # Clean the build dir so we don't accidentally use files we didn't intend
       rm -rf ./*
 
       # Pull only the files we need for the build from src
       cp $CRAFT_PART_SRC/pkg/ui/v1beta1/frontend/package*.json ./
-      npm ci
+      npm config set fetch-retry-mintimeout 200000 && \
+      npm config set fetch-retry-maxtimeout 1200000 && \
+      npm config get registry && \
+      npm config set registry https://registry.npmjs.org/ && \
+      npm config delete https-proxy && \
+      npm config set loglevel verbose && \
+      npm cache clean --force && \
+      npm ci --force --prefer-offline --no-audit
+
       cp -r $CRAFT_PART_SRC/pkg/ui/v1beta1/frontend/* .
       cp -r $CRAFT_STAGE/frontend-lib/dist/kubeflow ./node_modules/kubeflow
       npm run build:prod
@@ -73,11 +89,12 @@ parts:
     plugin: go
     source: https://github.com/kubeflow/katib
     source-type: git
-    source-tag: v0.17.0
+    source-tag: v0.18.0-rc.0
     build-snaps:
-      # Use go version that satisfies requirements in
-      # https://github.com/kubeflow/katib/blob/v0.17.0/docs/developer-guide.md#requirements
-      - go/1.21/stable
+      # According to https://github.com/kubeflow/katib/blob/v0.18.0-rc.0/CONTRIBUTING.md
+      # the version of go to use is 1.22 or later. As of now, the golang:alpine latest tag
+      # uses go v1.24, which is the base for the backend.
+      - go/1.24/stable
     build-environment:
       - CGO_ENABLED: 0
       - GOOS: linux
