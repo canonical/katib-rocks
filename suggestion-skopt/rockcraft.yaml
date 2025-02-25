@@ -37,7 +37,6 @@ parts:
       python-requirements:
         - requirements.txt
       build-environment:
-        # The Python version must match the one used in upstream
         - PARTS_PYTHON_INTERPRETER: "python3.11"
       override-build: |
         craftctl default
