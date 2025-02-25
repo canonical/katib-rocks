@@ -38,7 +38,6 @@ parts:
         - requirements.txt
       build-environment:
         # The Python version must match the one used in upstream
-        # https://github.com/kubeflow/katib/blob/v0.18.0-rc.0/cmd/suggestion/nas/enas/v1beta1/Dockerfile#L1
         - PARTS_PYTHON_INTERPRETER: "python3.11"
       override-build: |
         craftctl default
