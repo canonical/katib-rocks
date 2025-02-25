@@ -23,9 +23,9 @@ parts:
     source: https://github.com/kubeflow/kubeflow
     source-type: git
     # Set source-commit here to the commit cited in 
-    # https://github.com/kubeflow/katib/blob/master/pkg/ui/v1beta1/frontend/COMMIT
+    # https://github.com/kubeflow/katib/blob/v0.18.0-rc.0/pkg/ui/v1beta1/frontend/COMMIT
     # for this Katib release
-    source-commit: 046c6d3c8301a95a2809c0d927bbbf72638dd639
+    source-commit: 78969ee82
     build-environment:
       # suppress analytics collection
       - NG_CLI_ANALYTICS: "false"
