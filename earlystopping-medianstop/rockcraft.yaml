@@ -1,7 +1,7 @@
-# Based on https://github.com/kubeflow/katib/blob/v0.18.0-rc.0/cmd/earlystopping/medianstop/v1beta1/Dockerfile
+# Based on https://github.com/kubeflow/katib/blob/v0.18.0/cmd/earlystopping/medianstop/v1beta1/Dockerfile
 name: earlystopping-medianstop
 base: ubuntu@22.04
-version: 'v0.18.0-rc.0'
+version: 'v0.18.0'
 summary: Early stopping algorithm for katib.
 description: |
     The median stopping rule stops a pending trial X at step S if the trial’s best 
@@ -26,7 +26,7 @@ parts:
     requirements-and-deps:
       plugin: python
       source: https://github.com/kubeflow/katib.git
-      source-tag: "v0.18.0-rc.0"
+      source-tag: "v0.18.0"
       source-depth: 1
       source-type: git
       source-subdir: cmd/earlystopping/medianstop/v1beta1
@@ -45,7 +45,7 @@ parts:
     earlystopping-medianstop:
       plugin: dump
       source: https://github.com/kubeflow/katib.git
-      source-tag: "v0.18.0-rc.0"
+      source-tag: "v0.18.0"
       source-depth: 1
       source-type: git
       organize:
