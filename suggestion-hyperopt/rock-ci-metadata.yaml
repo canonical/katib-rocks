@@ -1,0 +1,6 @@
+integrations:
+  - consumer-repository: https://github.com/canonical/katib-operators.git
+
+    replace-image:
+      - file: charms/katib-controller/src/default-custom-images.json
+        path: suggestion__tpe
