@@ -1,0 +1,9 @@
+integrations:
+  - consumer-repository: https://github.com/canonical/katib-operators.git
+
+    replace-image:
+      - file: charms/katib-controller/src/default-custom-images.json
+        path: suggestion__grid
+
+      - file: charms/katib-controller/src/default-custom-images.json
+        path: suggestion__multivariate_tpe
