@@ -5,6 +5,5 @@ integrations:
       - file: charms/katib-controller/src/default-custom-images.json
         path: suggestion__grid
 
-    replace-image:
       - file: charms/katib-controller/src/default-custom-images.json
         path: suggestion__multivariate_tpe
