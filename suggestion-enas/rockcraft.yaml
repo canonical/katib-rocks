@@ -3,8 +3,7 @@ name: suggestion-enas
 base: ubuntu@22.04
 version: 'v0.19.0'
 summary: "Katib Suggestion enas"
-description: |
-    
+description: "Katib suggestion enas"  
 license: GPL-3.0
 run-user: _daemon_
 services:
