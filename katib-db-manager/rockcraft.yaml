@@ -1,9 +1,9 @@
-# Based on https://github.com/kubeflow/katib/blob/v0.18.0/cmd/db-manager/v1beta1/Dockerfile
+# Based on https://github.com/kubeflow/katib/blob/v0.19.0/cmd/db-manager/v1beta1/Dockerfile
 name: katib-db-manager
 summary: Katib DB Controller
 description: |
   Katib database manager.
-version: v0.18.0
+version: v0.19.0
 license: Apache-2.0
 base: ubuntu@22.04
 run-user: _daemon_
@@ -22,7 +22,7 @@ parts:
     plugin: go
     source: https://github.com/kubeflow/katib
     source-type: git
-    source-tag: v0.18.0
+    source-tag: v0.19.0
     build-snaps:
       - go
     stage-packages:
