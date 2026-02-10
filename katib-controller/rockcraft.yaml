@@ -41,6 +41,9 @@ parts:
       go mod download all
       go build -a -o ${CRAFT_PART_INSTALL}/katib-controller $CRAFT_PART_SRC_WORK
 
+      # make config dir
+      mkdir -p $CRAFT_PART_INSTALL/katib-config
+
   security-team-requirement:
     plugin: nil
     override-build: |
@@ -48,3 +51,11 @@ parts:
       (echo "# os-release" && cat /etc/os-release && echo "# dpkg-query" && \
        dpkg-query --root=${CRAFT_PROJECT_DIR}/../bundles/ubuntu-22.04/rootfs/ -f '${db:Status-Abbrev},${binary:Package},${Version},${source:Package},${Source:Version}\n' -W) \
        > ${CRAFT_PART_INSTALL}/usr/share/rocks/dpkg.query
+  
+  non-root-user:
+    after: [katib-controller]
+    plugin: nil
+    override-prime: |
+      craftctl default
+      install -d -o 584792 -g 584792 -m 770 \
+        katib-config
